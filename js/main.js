@@ -1,46 +1,52 @@
-(function(){
-const D=window.DATA,$=s=>document.querySelector(s);
-const h=(t,a={},...c)=>{const e=document.createElement(t);for(const k in a){if(k==='html')e.innerHTML=a[k];else e.setAttribute(k,a[k])}e.append(...c);return e};
-const hl=o=>JSON.stringify(o,null,2)
- .replace(/"([^"]+)":/g,'<i class="k">$1</i>:')
- .replace(/^(\s+)"([^"]*)"(,?)$/gm,'$1<i class="s">"$2"</i>$3')
- .replace(/: "([^"]*)"/g,': <i class="s">"$1"</i>')
- .replace(/: (\d+)/g,': <i class="n">$1</i>');
-const lb=$('#lb'),lbi=lb.querySelector('img'),lbp=lb.querySelector('p');let gal=[],gi=0;
-const show=()=>{const s=gal[gi];lbi.src=s.src;lbi.alt=s.t||'';lbp.textContent=(s.t||'')+(gal.length>1?`  (${gi+1}/${gal.length})`:'')};
-const step=d=>{gi=(gi+d+gal.length)%gal.length;show()};
-const open=(g,i)=>{gal=g;gi=i;show();lb.showModal()};
-lb.querySelector('.x').onclick=()=>lb.close();lb.querySelector('.pv').onclick=()=>step(-1);lb.querySelector('.nx').onclick=()=>step(1);
-lb.addEventListener('click',e=>{if(e.target===lb)lb.close()});
-lb.addEventListener('keydown',e=>{if(e.key==='ArrowLeft')step(-1);if(e.key==='ArrowRight')step(1)});
-function card(it,sib){
- const f=h('figure',{class:'card'});let b;
- if(it.k==='vid'){
-  b=h('button',{type:'button','aria-label':'Play '+it.t,style:`aspect-ratio:${it.w}/${it.h}`},h('img',{src:it.poster,alt:it.t,loading:'lazy',width:it.w,height:it.h}),h('span',{class:'play'},'▶ '+it.dur));
-  b.onclick=()=>{const v=h('video',{src:it.src,poster:it.poster,controls:'',autoplay:'',playsinline:'',preload:'metadata','aria-label':it.t});v.style.aspectRatio=`${it.w}/${it.h}`;b.replaceWith(v)};
- }else{
-  const g=it.k==='car'?it.slides:sib.filter(x=>x.k==='img');
-  b=h('button',{type:'button','aria-label':'Open '+it.t},h('img',{src:it.src,alt:it.t,loading:'lazy',width:it.w,height:it.h}));
-  if(it.k==='car')b.append(h('span',{class:'badge'},it.slides.length+' photos'));
-  b.onclick=()=>open(g,it.k==='car'?0:g.indexOf(it));
- }
- f.append(b,h('figcaption',{},it.t));return f;
-}
-const main=$('#work');
-D.sections.forEach(s=>{
- const sec=h('section',{id:s.id,class:'sec wrap'},h('h2',{},s.title),h('p',{class:'lead'},s.lead));
- s.blocks.forEach(b=>{
-  const blk=h('div');if(b.title)blk.append(h('h3',{},b.title));
-  blk.append(h('pre',{class:'term glass',role:'note','aria-label':'Project summary',html:'const project = '+hl(b.meta)+';'}));
-  b.groups.forEach(g=>{blk.append(h('h4',{},g.name));const m=h('div',{class:'masonry'});g.items.forEach(i=>m.append(card(i,g.items)));blk.append(m)});
-  if(b.note)blk.append(h('p',{class:'empty glass'},b.note));
-  sec.append(blk)});
- main.append(sec)});
-const strip=$('#strip');[...D.hero,...D.hero].forEach((x,i)=>strip.append(h('img',{src:x.src,alt:i<D.hero.length?x.t:'','aria-hidden':i<D.hero.length?'false':'true',loading:i<4?'eager':'lazy'})));
-const reels=[];D.sections.forEach(s=>s.blocks.forEach(b=>b.groups.forEach(g=>g.items.forEach(i=>{if(i.k==='vid')reels.push(i)}))));
-const labels=['All',...new Set(reels.map(r=>r.from))],chips=$('#chips'),grid=$('#reelGrid');
-function draw(f){grid.replaceChildren(...reels.filter(r=>f==='All'||r.from===f).map(r=>{const c=card(r);c.querySelector('figcaption').textContent=r.from+' · '+r.t;return c}));
- chips.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x.dataset.f===f))}
-labels.forEach(l=>{const c=h('button',{type:'button','data-f':l},l+(l==='All'?` (${reels.length})`:''));c.onclick=()=>draw(l);chips.append(c)});
-draw('All');$('#yr').textContent=new Date().getFullYear();
+(() => {
+  'use strict';
+  const D = window.HADI, $ = s => document.querySelector(s), page = document.body.dataset.page;
+  const draw = (selector, items) => window.drawPortfolio(selector, items);
+  const images = D.design.filter(x => x.type === 'image');
+  if (page === 'home') {
+    draw('#selected-graphics', D.homeGraphicIds.map(id => images.find(x => x.id === id)).filter(Boolean));
+    const play = $('#good-shift-play');
+    if (play) play.onclick = () => window.openPortfolioViewer(D.projects['good-shift'].videos, 10, play);
+    const slider = $('#hero-slider'), pause = $('#pause-slider');
+    let paused = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    function setPause(value) { paused = value; pause.setAttribute('aria-pressed', String(paused)); pause.textContent = paused ? 'Play slider' : 'Pause slider'; }
+    setPause(paused);
+    function shift(direction) {
+      const distance = slider.firstElementChild.getBoundingClientRect().width + 16;
+      const end = slider.scrollWidth - slider.clientWidth;
+      let x = slider.scrollLeft + direction * distance;
+      if (x > end + 5) x = 0; else if (x < -5) x = end;
+      slider.scrollTo({ left: x, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' });
+    }
+    $('#slider-prev').onclick = () => { setPause(true); shift(-1); };
+    $('#slider-next').onclick = () => { setPause(true); shift(1); };
+    pause.onclick = () => setPause(!paused);
+    slider.addEventListener('keydown', e => { if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') { e.preventDefault(); setPause(true); shift(e.key === 'ArrowRight' ? 1 : -1); } });
+    setInterval(() => { if (!paused && !document.hidden && !slider.matches(':hover') && !slider.contains(document.activeElement)) shift(1); }, 5500);
+  }
+  if (D.projects[page]) {
+    const p = D.projects[page]; draw('#project-images', p.images); draw('#project-videos', p.videos);
+  }
+  if (page === 'travel') {
+    for (const id of ['al-haramain', 'karwan-al-asar']) {
+      draw(`#${id}-images`, D.projects[id].images); draw(`#${id}-videos`, D.projects[id].videos);
+    }
+  }
+  function filters(items, options) {
+    const bar = $('#filters'), grid = $('#filtered-gallery'), count = $('#result-count');
+    let active = new URLSearchParams(location.search).get('category') || 'all';
+    if (!options.some(x => x.id === active)) active = 'all';
+    function render() {
+      const chosen = active === 'all' ? items : items.filter(x => (x.categories || []).includes(active) || x.group === active);
+      draw(grid, chosen); count.textContent = `${chosen.length} ${page === 'motion' ? 'films & motion pieces' : 'individual artworks'}`;
+      [...bar.children].forEach(b => b.setAttribute('aria-pressed', String(b.dataset.id === active)));
+    }
+    for (const o of options) {
+      const button = document.createElement('button'); button.type = 'button'; button.textContent = o.label; button.dataset.id = o.id;
+      button.onclick = () => { active = o.id; try { history.replaceState({}, '', `?category=${encodeURIComponent(active)}`); } catch (_) {} render(); }; bar.append(button);
+    }
+    render();
+  }
+  if (page === 'graphic-design') filters(images, [{ id:'all',label:'All design' }, ...D.categories.map(c => ({id:c.id,label:c.short}))].filter(c => c.id !== 'motion'));
+  if (page === 'motion') filters(D.videos, [{id:'all',label:'All motion'},...D.videoGroups]);
 })();

@@ -1,0 +1,41 @@
+:root { --focus: #42e0ff; }
+button, input, select { font: inherit; }
+button { cursor: pointer; }
+button:focus-visible, a:focus-visible, select:focus-visible { outline: 2px solid var(--focus); outline-offset: 5px; }
+[hidden] { display: none !important; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+.menu-toggle { display: none; }
+.media-card { margin: 0 0 28px; break-inside: avoid; min-width: 0; }
+.media-open { display: block; padding: 0; width: 100%; color: inherit; background: #0d1523; border: 1px solid #ffffff22; position: relative; overflow: hidden; }
+.media-open img { display: block; width: 100%; height: auto; aspect-ratio: var(--ratio); object-fit: contain; transition: filter .3s; }
+.media-open:hover img { filter: brightness(1.12); }
+.media-mark { position: absolute; right: 12px; bottom: 12px; padding: 6px 11px; background: #090e19db; border: 1px solid #ffffff40; color: #fff; border-radius: 7px; font-size: 12px; line-height: 1.4; }
+.media-card figcaption { padding: 13px 0 0; line-height: 1.5; }
+.media-card figcaption strong { display: block; font-size: 14px; font-weight: 600; }
+.media-card figcaption span { display: block; margin-top: 3px; font-size: 11px; color: var(--mut, #8e99a9); }
+.gallery-grid { columns: 3; column-gap: 24px; }
+.video-grid { display: block; columns: 3; column-gap: 25px; }
+.video-grid .media-card { display: inline-block; width: 100%; }
+.video-grid .video .media-open img { aspect-ratio: var(--ratio); object-fit: contain; background: #060a12; }
+.filter-bar { display: flex; flex-wrap: wrap; gap: 8px; margin: 32px 0 24px; }
+.filter-bar button { border: 1px solid #ffffff29; color: inherit; background: #ffffff06; padding: 9px 16px; font-size: 12px; }
+.filter-bar button[aria-pressed="true"] { background: var(--accent, #42e0ff); color: #07101a; border-color: var(--accent, #42e0ff); }
+.result-count { margin: 0 0 24px; font-size: 12px; color: var(--mut, #8e99a9); }
+.viewer-open { overflow: hidden; }
+dialog.viewer { inset: 0; width: 100vw; height: 100dvh; max-width: 100vw; max-height: 100dvh; margin: 0; padding: 54px 60px 18px; background: #05070bef; color: #fff; border: 0; text-align: left; }
+dialog.viewer::backdrop { background: #000e; backdrop-filter: blur(14px); }
+dialog.viewer[open] { display: flex; flex-direction: column; gap: 10px; }
+.viewer-stage { display: flex; flex: 1; min-height: 0; align-items: center; justify-content: center; }
+.viewer-stage img, .viewer-stage video { display: block; width: auto; height: auto; max-height: 100%; max-width: 100%; object-fit: contain; }
+.viewer-stage video { width: min(100%, 1200px); height: 100%; }
+.viewer-close, .viewer-step { position: absolute; z-index: 2; border: 1px solid #ffffff38; background: #111925ed; color: white; padding: 10px 15px; font-size: 15px; border-radius: 8px; }
+.viewer-close { right: 18px; top: 12px; }
+.viewer-step { top: 46%; font-size: 22px; width: 42px; padding: 10px 0; }
+.viewer-step[data-step="-1"] { left: 8px; }.viewer-step[data-step="1"] { right: 8px; }
+.viewer-bottom { display: flex; justify-content: space-between; align-items: center; gap: 20px; width: min(100%, 1200px); margin: auto; }
+.viewer-bottom h2 { font: 600 15px/1.5 system-ui; letter-spacing: 0; margin: 0; }
+.viewer-credit, .viewer-counter { font: 12px/1.4 system-ui; color: #aab5c7; margin: 4px 0 0; }
+.back-link { display: inline-block; font-size: 12px; text-decoration: none; margin-bottom: 25px; color: var(--mut); }
+@media(max-width: 900px) { .gallery-grid { columns: 2; }.video-grid { columns: 2; }.menu-toggle { display: inline-flex; border: 1px solid #ffffff40; background: #ffffff08; color: inherit; padding: 7px 12px; border-radius: 8px; font-size: 12px; } }
+@media(max-width: 560px) { .gallery-grid { columns: 1; }.video-grid { columns: 1; }.filter-bar { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 10px; }.filter-bar button { flex: 0 0 auto; }.viewer-bottom { gap: 8px; }.viewer-bottom h2 { font-size: 13px; }dialog.viewer { padding: 58px 40px 20px; }.media-card { margin-bottom: 24px; } }
+@media(prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; } }

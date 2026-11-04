@@ -1,0 +1,19 @@
+HADI.STUDIO — FINAL UNIFIED VERIFICATION
+
+PASS: One root website; no nested standalone DESIGN3R project.
+PASS: All 9 internal pages share the HADI.STUDIO navigation and footer.
+PASS: 83 real DESIGN3R image items and 7 DESIGN3R motion pieces.
+PASS: Every design category is populated, including streaming and esports.
+PASS: 274 HTML references and 293 catalog asset paths checked.
+PASS: 264 image files decoded successfully.
+PASS: All 29 video files fully decoded, including audio where present.
+PASS: JavaScript syntax checked.
+PASS: No travel artwork in the opening slider; production highlight included.
+PASS: Good Shift, Sports Rival, Code Connect and both travel brands organized.
+PASS: Gallery filters, image lightbox, Escape close and homepage return tested.
+PASS: Mobile widths 375 and 305 CSS px, tablet 753 px, desktop 1348 px.
+PASS: Optimized C4R7ITOS intro played to completion in browser.
+PASS: Good Shift film played beyond 36 seconds without a media error.
+PASS: Every individual website file is below the GitHub browser file limit.
+
+Live repository was not changed or deployed.
